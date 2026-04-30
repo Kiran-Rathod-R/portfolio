@@ -133,61 +133,38 @@ window.addEventListener('scroll', () => btt.classList.toggle('show', window.scro
 btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
 // Contact form
-document.getElementById('contactForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const btn = this.querySelector('.form-submit');
-  btn.textContent = 'Sending...';
-  setTimeout(() => {
-    this.reset();
-    btn.textContent = 'Send Message →';
-    const s = document.getElementById('formSuccess');
-    s.style.display = 'block';
-    setTimeout(() => s.style.display = 'none', 4000);
-  }, 1000);
-});
-
-// Contribution grid
-(function buildContribGrid() {
-  const grid = document.getElementById('contribGrid');
-  if (!grid) return;
-  const levels = [0,0,0,0,1,1,2,0,0,1,3,2,0,0,1,0,2,2,0,0,4,1,0,0,1,2,0,3,0,0,2,1,0,1,4,2,0,0,1,0,2,3,0,1,0,2,0,0,1,3,2,0,0,4,0,1,0,2,1,0,0,3,2,0,1,0,2,0,0,1,4,2,0,0,1,2,0,0,3,1,0,2,0,1,4,0,0,2,1,0,3,0,1,2,0,0,1,4,2,0,0,1,0,3,2,0,1,2,0,0,4,1,0,0,2,3,0,1,0,2,0,0,1,3,2,0,0,4,1,0,2,0,1,0,0,2,3,0,1,4,0,2,0,0,1,2,3,0,0,1,0,2,3,0,1,0,0,2,4,1,0,0,2,3,0,1,0,2,0,0,1,3,4,0,0,2,1,0,2,3,0,0,1,2,0,3,0,0,1,4,2,0,0,1,0,2,3,0,1,0,0,2,4,1,0,0,2,3,0,1,0,2,0,0,1,3,0,0,2,1,0,4,0,1,2,0,0,1,3,2,0,0,1,0,2,3,0,4,1,0,2,0,0,1,2,3,0,0,1,0,2,3,0,1,0,0,2,4,1,0,0,2,3,0,1,0,2,0,0,1,3,4,0,0,2,1,0,2,3,0,0,1,0,2,3,0,1,4,0,0,2,1,0,2,3,0,0,1,4,2,0,0,1,0,2,3,0,1,0,0,2,4,1,0,0,2,3,0,1,0,2,0,0,1,3,0,0,2,1,0,4,0,1,2,0,0,1,3,2,0,0,1,0,2,3,0,4,1,0,2,0];
-  for (let i = 0; i < 156; i++) {
-    const cell = document.createElement('div');
-    cell.className = 'contrib-cell';
-    cell.setAttribute('data-level', levels[i % levels.length]);
-    grid.appendChild(cell);
-  }
-})();
-
-// Smooth nav links
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    const t = document.querySelector(a.getAttribute('href'));
-    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
-  });
-});
-
-
 document.getElementById("contactForm").addEventListener("submit", async function(e) {
   e.preventDefault();
+
+  const btn = this.querySelector(".form-submit");
+  btn.textContent = "Sending...";
+  btn.disabled = true;
 
   const name = document.getElementById("name").value;
   const email = document.getElementById("email").value;
   const message = document.getElementById("message").value;
 
-  const res = await fetch("https://portfolio-uobb.onrender.com", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ name, email, message })
-  });
+  try {
+    const res = await fetch("https://portfolio-uobb.onrender.com/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ name, email, message })
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (data.success) {
-    document.getElementById("statusMsg").innerText = "Message sent successfully!";
-  } else {
-    document.getElementById("statusMsg").innerText = "Error sending message.";
+    if (data.success) {
+      document.getElementById("statusMsg").innerText = "Message sent successfully!";
+      this.reset();
+    } else {
+      document.getElementById("statusMsg").innerText = "Error sending message.";
+    }
+  } catch (err) {
+    document.getElementById("statusMsg").innerText = "Server error.";
   }
+
+  btn.textContent = "Send Message →";
+  btn.disabled = false;
 });
