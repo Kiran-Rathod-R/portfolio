@@ -18,8 +18,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: "kiran.rathod@nmiet.edu.in",        // ✅ replace with your Gmail
-    pass: "tcrojsxcknglccnx"           // ✅ replace with Gmail App Password
+    user: "rathodkiran892@gmail.com",        // ✅ replace with your Gmail
+    pass: "qfczxxpvowbqcfyz"           // ✅ replace with Gmail App Password
   },
   connectionTimeout: 10000,
   greetingTimeout: 10000,
@@ -32,9 +32,9 @@ app.post("/send", async (req, res) => {
 
   try {
     await transporter.sendMail({
-      from: "kiran.rathod@nmiet.edu.in",      // ✅ SAME Gmail
+      from: "rathodkiran892@gmail.com",      // ✅ SAME Gmail
       replyTo: email,
-      to: "kiran.rathod@nmiet.edu.in",        // ✅ where you receive messages
+      to: "rathodkiran892@gmail.com",        // ✅ where you receive messages
       subject: `Portfolio Message from ${name}`,
       html: `
         <h2>New Message</h2>
