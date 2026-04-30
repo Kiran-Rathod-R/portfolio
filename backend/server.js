@@ -7,12 +7,24 @@ const cors = require("cors");
 
 const app = express();
 
+
+
+
 app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Backend is working 🚀");
 });
+
+
+auth: {
+  user: process.env.EMAIL_USER,
+  pass: process.env.EMAIL_PASS
+}
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on ${PORT}`));
 
 // 🔐 Configure your email
 const transporter = nodemailer.createTransport({
