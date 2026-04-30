@@ -12,13 +12,18 @@ app.get("/", (req, res) => {
   res.send("Backend is working 🚀");
 });
 
-// ✅ Email transporter (use env variables)
+// ✅ Email transporter (WORKING CONFIG)
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
+    user: "kiran.rathod@nmiet.edu.in",        // ✅ replace with your Gmail
+    pass: "tcrojsxcknglccnx"           // ✅ replace with Gmail App Password
+  },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000
 });
 
 // ✅ Contact API
@@ -27,9 +32,9 @@ app.post("/send", async (req, res) => {
 
   try {
     await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+      from: "kiran.rathod@nmiet.edu.in",      // ✅ SAME Gmail
       replyTo: email,
-      to: process.env.EMAIL_USER,
+      to: "kiran.rathod@nmiet.edu.in",        // ✅ where you receive messages
       subject: `Portfolio Message from ${name}`,
       html: `
         <h2>New Message</h2>
@@ -41,11 +46,11 @@ app.post("/send", async (req, res) => {
 
     res.status(200).json({ success: true });
   } catch (error) {
-    console.log(error); // 👈 important for debugging
+    console.log("EMAIL ERROR:", error);   // 👈 debug logs
     res.status(500).json({ success: false });
   }
 });
 
-// ✅ Correct PORT (Render compatible)
+// ✅ Correct PORT (Render)
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on ${PORT}`));
