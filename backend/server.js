@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
   secure: false,
   auth: {
     user: "rathodkiran892@gmail.com",        // ✅ replace with your Gmail
-    pass: "qfczxxpvowbqcfyz"           // ✅ replace with Gmail App Password
+    pass: "qfcowbqcfyz"           // ✅ replace with Gmail App Password
   },
   connectionTimeout: 10000,
   greetingTimeout: 10000,
