@@ -45,6 +45,8 @@ The goal of this project is to create a strong online presence and provide recru
 
 ---
 
+
+[![Portfolio](assets/portfolio.png)](https://kiran-r.netlify.app)
 ## 📂 Project Structure
 
 portfolio/
