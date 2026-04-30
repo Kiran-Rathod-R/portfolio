@@ -175,7 +175,7 @@ document.getElementById("contactForm").addEventListener("submit", async function
   const email = document.getElementById("email").value;
   const message = document.getElementById("message").value;
 
-  const res = await fetch("https://your-backend.onrender.com/send", {
+  const res = await fetch("https://portfolio-uobb.onrender.com", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
