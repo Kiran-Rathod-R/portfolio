@@ -1082,6 +1082,13 @@ nav.scrolled {
   position: relative;
   overflow: hidden;
   cursor: none;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.proj-card .proj-desc {
+  flex-grow: 1;
 }
 
 .proj-card:hover {
@@ -1516,6 +1523,19 @@ nav.scrolled {
   color: var(--cyan);
   border-color: rgba(93, 228, 199, 0.2);
   background: var(--cyan-soft);
+}
+
+/* ============ PROFILE GRID ============ */
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ============ ACHIEVEMENTS ============ */
@@ -2021,11 +2041,15 @@ body {
 /* Card */
 .cert-card {
   background: #171c24;
-  padding: 20px;
+  padding: 24px 20px;
   border-radius: 15px;
   transition: 0.3s;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
 /* Hover effect */
