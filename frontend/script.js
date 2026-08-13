@@ -78,8 +78,8 @@ let counted = false;
 const metricObs = new IntersectionObserver(entries => {
   if (entries[0].isIntersecting && !counted) {
     counted = true;
-    countUp(document.getElementById('c1'), 5);
-    countUp(document.getElementById('c2'), 8);
+    countUp(document.getElementById('c1'), 10);
+    countUp(document.getElementById('c2'), 13);
     countUp(document.getElementById('c3'), 100);
   }
 }, { threshold: 0.5 });
