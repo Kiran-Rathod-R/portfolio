@@ -5,13 +5,20 @@ let pool = null;
 let lastInitError = null;
 
 function getDbConfig() {
-  return {
+  const isLocal = process.env.DB_HOST === "localhost" || process.env.DB_HOST === "127.0.0.1" || !process.env.DB_HOST;
+  const config = {
     host: process.env.DB_HOST || "localhost",
     user: process.env.DB_USER || "root",
     password: process.env.DB_PASSWORD || "",
     port: parseInt(process.env.DB_PORT || "3306", 10),
     database: process.env.DB_NAME || "portfolio_db"
   };
+
+  if (!isLocal || process.env.DB_SSL === "true") {
+    config.ssl = { rejectUnauthorized: false };
+  }
+
+  return config;
 }
 
 // Initialize Database & Messages Table automatically
@@ -20,16 +27,21 @@ async function initDB() {
   try {
     lastInitError = null;
 
-    // 1. Connection without DB name to ensure DB exists
-    const tempConnection = await mysql.createConnection({
-      host: dbConfig.host,
-      user: dbConfig.user,
-      password: dbConfig.password,
-      port: dbConfig.port
-    });
-
-    await tempConnection.query(`CREATE DATABASE IF NOT EXISTS \`${dbConfig.database}\`;`);
-    await tempConnection.end();
+    // 1. Try creating database if on localhost / supported
+    try {
+      const tempConnection = await mysql.createConnection({
+        host: dbConfig.host,
+        user: dbConfig.user,
+        password: dbConfig.password,
+        port: dbConfig.port,
+        ssl: dbConfig.ssl
+      });
+      await tempConnection.query(`CREATE DATABASE IF NOT EXISTS \`${dbConfig.database}\`;`);
+      await tempConnection.end();
+    } catch (createDbErr) {
+      // In cloud providers, DB usually already exists or creation is restricted; proceed to pool creation
+      console.log("ℹ️ Cloud/Database notice:", createDbErr.message);
+    }
 
     // 2. Create connection pool with database selected
     pool = mysql.createPool({
@@ -56,7 +68,6 @@ async function initDB() {
   } catch (error) {
     lastInitError = error;
     console.error("⚠️ MySQL Initialization Error:", error.message);
-    console.error("💡 Tip: Make sure MySQL service is running and credentials in .env are correct.");
     return false;
   }
 }
@@ -64,7 +75,7 @@ async function initDB() {
 // Helper to ensure database pool is ready
 async function ensurePool() {
   if (!pool) {
-    require("dotenv").config(); // reload .env if changed
+    require("dotenv").config();
     await initDB();
   }
   if (!pool) {
