@@ -152,11 +152,11 @@ document.getElementById("contactForm").addEventListener("submit", async function
 
   let isSuccess = false;
 
-  // 1. Try local or production Node server endpoint first
-  const serverEndpoints = [
-    "http://localhost:5000/send",
-    "https://portfolio-uobb.onrender.com/send"
-  ];
+  // 1. Try production Render server endpoint first (or local if developing)
+  const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+  const serverEndpoints = isLocal
+    ? ["http://localhost:5000/send", "https://portfolio-uobb.onrender.com/send"]
+    : ["https://portfolio-uobb.onrender.com/send", "http://localhost:5000/send"];
 
   for (const endpoint of serverEndpoints) {
     try {
